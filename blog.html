@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Blog | Xinzhi Xue</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/vendor.css">
+  </head>
+  <body>
+    <header class="s-header">
+      <div class="header-logo">
+        <a href="index.html"><img src="images/education_w.svg" alt="Homepage" style="width: 50px; height: 56px;"></a>
+      </div>
+      <div class="header-content">
+        <nav class="row header-nav-wrap">
+          <ul class="header-nav">
+            <li><a href="index.html#hero">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#portfolio">Research</a></li>
+            <li><a href="index.html#services">Publications</a></li>
+            <li><a href="index.html#testimonials">Music</a></li>
+            <li><a href="blog.html">Blog</a></li>
+			<li><a href="mailto:xinzhialex.xue@gmail.com" title="Contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+	  <section class="s-blog target-section h-dark-bg" style="padding-top: 8rem; padding-bottom: 6rem;">
+	    <div class="row blog-entries">
+	      <div class="column large-8 tab-full">
+			<article class="blog-post">
+		        <h2 class="text-light" style="font-size: 2.4rem; margin-bottom: 1.5rem;"><a href="#">Run LLM Completely Offline</a></h2>
+			    <h5 class="h5 text-light" style="margin-top: 0; color: #bbb;">Feb 9, 2025</h5>
+				<div class="blog-content">
+				<p class="text-light" style="font-size: 1.6rem; line-height: 1.6;">
+	            Imagine you’re solo backpacking in Yosemite — magnificent waterfalls, a sky glittering with stars. And suddenly, you feel the irresistible urge to chat with someone, not just anyone, a chatbot to be precise. This guide shows you how to summon one in total isolation, no internet required, so you’re never truly off the grid.
+	          	</p>
+			   <pre><code>
+			  Step 0: activate python virtual environment 
+			  python3 -m venv myenv
+			  source myenv/bin/activate
+			  
+
+
+			  ### Step 1: Prepare Files on an Internet-Connected Machine**
+			  #### 1.1 Download Model & Dependencies
+			  ```bash
+			  # Install git-lfs first (on the connected machine)
+			  git lfs install
+			  git clone https://huggingface.co/deepseek-ai/deepseek-r1 /Volumes/deepseek-r1
+
+			  # Create requirements.txt with:
+			  echo "torch
+			  transformers" > requirements.txt
+
+			  # Download Python wheels for Apple Silicon (ARM64)
+			  pip download -r requirements.txt --platform macosx_13_0_arm64 --only-binary=:all:
+			  ```
+
+			  #### 1.2 Package for Transfer
+			  ```bash
+			  mkdir deepseek-offline
+			  mv deepseek-r1 requirements.txt *.whl deepseek-offline/
+
+			  %% build sentencepiece wheel
+			  Install Dependencies for Building:
+			  Ensure you have the required build tools installed:
+			  ‘’’bash
+			  xcode-select --install
+			  brew install cmake
+			  ‘’’
+			  Clone the sentencepiece Repository:
+			  You can get the source code from the official repository:
+			  bash
+			  Copy
+			  git clone https://github.com/google/sentencepiece.git
+			  cd sentencepiece
+			  Install Python Build Tools:
+			  You might need setuptools and wheel to build the .whl file:
+			  ‘’’bash
+			  pip install setuptools wheel
+			  ‘’’
+
+			  Build the Wheel:
+			  Open sentencepiece/python folder and 
+			  1. replace src with python/src in every places
+			  2. Replace build_bundled.sh with python/build_bundled.sh
+			  3. Replace _version.py with python/_version.py
+
+			  Now, you can build the wheel by running:
+			  ‘’’Bash
+			  Cd /Users/xxue/sentencepiece
+			  python python/setup.py bdist_wheel
+			  ‘’’
+
+			  Find the .whl File:
+			  After running the above command, navigate to the dist/ folder, and you should find the .whl file for your platform.
+			  Install the Wheel:
+			  Once you have the .whl file, you can install it using pip:
+			  bash
+			  Copy
+			  pip install dist/sentencepiece-*.whl
+
+
+			  ‘’’bash
+			  zip -r deepseek-offline.zip deepseek-offline
+			  ```
+
+			  ---
+
+			  ### **Step 2: Transfer to MacBook Pro**
+			  1. Copy `deepseek-offline.zip` via USB/external drive.
+			  2. Unzip on your Mac:
+			  ```bash
+			  unzip deepseek-offline.zip -d ~/Documents/deepseek-offline
+			  ```
+
+			  ---
+
+			  ### **Step 3: Install Docker for Apple Silicon**
+			  1. Download **Docker Desktop for Apple Silicon** (ARM64) from [here](https://docs.docker.com/desktop/install/mac-install/).
+			  2. Install offline:
+			     - Double-click the `.dmg` file
+			     - Drag Docker to Applications folder
+			  3. Launch Docker Desktop and complete initial setup (no sign-in needed).
+
+			  ---
+
+			  ### **Step 4: Build the Offline Docker Image**
+			  #### 4.1 Create Dockerfile
+			  ```bash
+			  cd /Users/xue/LLM-Offline/deepseek-offline
+			  cat <<EOF > Dockerfile
+			  # Apple Silicon-compatible base image
+			  FROM python:3.13-slim
+
+			  # Disable all network during build
+			  RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/99force-yes && \
+			      echo 'APT::Get::AllowUnauthenticated "true";' >> /etc/apt/apt.conf.d/99force-yes && \
+			      apt-get update && apt-get install -y --no-install-recommends \
+			      libopenblas-dev \
+			      && rm -rf /var/lib/apt/lists/*
+
+			  # Copy offline packages
+			  COPY *.whl /tmp/wheels/
+			  COPY requirements.txt .
+
+			  # Install dependencies offline
+			  RUN pip install --find-links /tmp/wheels/  -r requirements.txt
+
+			  # Copy model
+			  COPY deepseek-r1-Distill-Qwen-1.5B /app/model
+
+			  # Set cache environment variable to directory that is writable
+			  RUN mkdir -p /tmp/huggingface_cache && chmod -R 777 /tmp/huggingface_cache
+			  ENV HF_HOME=/tmp/huggingface_cache
+
+			  # Set environment variables to prevent telemetry/phoning home
+			  ENV TRANSFORMERS_OFFLINE=1
+			  ENV HF_DATASETS_OFFLINE=1
+
+			  WORKDIR /app
+			  EOF
+			  ```
+
+			  #### 4.2 Build the Image
+			  ```bash
+			  docker build -t deepseek-r1-offline .
+			  ```
+
+			  ---
+
+			  ### **Step 5: Run with Full Isolation**
+			  ```bash
+			  # Run with NO network and read-only filesystem
+			  docker run --rm \
+			    --network none \
+			    --read-only \
+			    --mount type=tmpfs,destination=/tmp \
+			    deepseek-r1-offline \
+			    python -c "
+			  from transformers import AutoModelForCausalLM, AutoTokenizer
+			  import torch
+
+			  model = AutoModelForCausalLM.from_pretrained('/app/model', local_files_only=True).to('cpu')
+			  tokenizer = AutoTokenizer.from_pretrained('/app/model', local_files_only=True)
+
+			  inputs = tokenizer('Explain quantum physics simply:', return_tensors='pt')
+			  outputs = model.generate(**inputs, max_length=100)
+			  print(tokenizer.decode(outputs[0]))
+			  "
+			  ```
+
+			  ---
+
+			  ### **Step 6: Verify No Data Leakage**
+			  1. Confirm Docker container has no network:
+			  ```bash
+			  # While container is running (in another terminal)
+			  docker exec -it <CONTAINER_ID> sh
+			  ping 8.8.8.8  # Should fail immediately
+			  ```
+
+			  2. Monitor host machine traffic:
+			  ```bash
+			  sudo lsof -i -P -n | grep ESTABLISHED  # Should show no Docker-related connections
+			  ```
+
+			  ---
+
+			  ### **Optional: Persistent Script**
+			  1. Create `inference.py` in your host's `deepseek-offline` folder:
+			  ```python
+			  from transformers import AutoModelForCausalLM, AutoTokenizer
+			  import torch
+
+			  model = AutoModelForCausalLM.from_pretrained('/app/model', local_files_only=True).to('mps')  # M1 GPU acceleration
+			  tokenizer = AutoTokenizer.from_pretrained('/app/model', local_files_only=True)
+
+			  def run(prompt):
+			      inputs = tokenizer(prompt, return_tensors="pt").to('mps')
+			      outputs = model.generate(**inputs, max_length=200)
+			      return tokenizer.decode(outputs[0])
+
+			  if __name__ == "__main__":
+			      print(run("Explain dark matter:"))
+			  ```
+
+			  2. Run it through Docker:
+			  ```bash
+			  docker run --rm \
+			    --network none \
+			    --read-only \
+			    --mount type=tmpfs,destination=/tmp \
+			    -v ~/Documents/deepseek-offline/inference.py:/app/inference.py \
+			    deepseek-r1-offline \
+			    python inference.py
+			  ```
+
+			  ---
+
+			  **Key Security Features**
+			  1. `--network none`: Kernel-level network isolation
+			  2. `--read-only`: Container cannot modify its filesystem
+			  3. `tmpfs mount`: Ephemeral storage wiped on exit
+			  4. `TRANSFORMERS_OFFLINE=1`: Disables Hugging Face telemetry
+			  5. Apple Silicon-native build: Avoids x86 emulation vulnerabilities
+
+			  ---
+
+			  **Cleanup**
+			  ```bash
+			  # Remove container and image when done
+			  docker rmi deepseek-r1-offline
+			  ```
+
+			  The use of MPS (`device='mps'`) leverages your M1 Pro's GPU while keeping everything local.
+
+			  ///from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
+			  import torch, threading
+
+			  # Load model and tokenizer from local directory.
+			  tokenizer = AutoTokenizer.from_pretrained('/app/model', local_files_only=True)
+			  model = AutoModelForCausalLM.from_pretrained('/app/model', local_files_only=True).to('cpu')
+
+			  # Prepare input.
+			  inputs = tokenizer("Explain quantum physics simply:", return_tensors="pt")
+
+			  # Create a streamer object. It yields text as tokens are generated.
+			  streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
+
+			  # Run generation in a separate thread.
+			  def generate():
+			      model.generate(
+			          inputs.input_ids,
+			          max_length=200,  # Adjust as needed.
+			          streamer=streamer
+			      )
+
+			  threading.Thread(target=generate).start()
+
+			  # Stream and print tokens as they are produced.
+			  for token in streamer:
+			      print(token, end="", flush=True)
+				 </code></pre>
+				 </div>
+	        </article>
+	      </div>
+	    </div>
+	  </section>
+    </section>
+
+    <footer class="s-footer h-dark-bg">
+      <div class="row s-footer__bottom">
+        <div class="column large-full ss-copyright">
+          <span>© Xinzhi Xue 2020</span>
+        </div>
+        <div class="ss-go-top">
+          <a class="smoothscroll" title="Back to Top" href="#top">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M12 0l8 9h-6v15h-4v-15h-6z"/></svg>
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
