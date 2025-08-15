@@ -312,7 +312,21 @@
         });
     };
 
+	/* thesis iframe auto-resize
+	 * ------------------------------------------------------ */
+	const ssResizeThesisFrame = function() {
+	    function resizeThesisFrame() {
+	        var iframe = document.getElementById('thesis-frame');
+	        if (iframe) {
+	            var offsetTop = iframe.getBoundingClientRect().top + window.scrollY;
+	            var availableHeight = window.innerHeight - offsetTop - 20; // 20px padding
+	            iframe.style.height = availableHeight + 'px';
+	        }
+	    }
 
+	    // Run on load and on resize
+	    $(window).on('load resize', resizeThesisFrame);
+	};
 
    /* initialize
     * ------------------------------------------------------ */
@@ -329,7 +343,8 @@
         ssAlertBoxes();
         ssSmoothScroll();
         ssBackToTop();
-
+	    ssResizeThesisFrame();
+		
     })();
 
 })(jQuery);
