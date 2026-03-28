@@ -1,0 +1,217 @@
+/* ===================================================================
+ * Blog Styles
+ * Author: Xue -c
+ * Date: 2025-11-26
+ * ------------------------------------------------------------------- */
+
+/* Blog Post Container */
+.blog-post {
+    margin-bottom: 4rem;
+}
+
+.blog-post h2 a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.blog-post h2 a:hover {
+    color: #39b54a;
+}
+
+/* Blog Content */
+.blog-content {
+    margin-top: 2rem;
+}
+
+.blog-content p {
+    margin-bottom: 2rem;
+}
+
+/* Section Headers */
+.blog-section {
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.blog-section h3 {
+    color: #39b54a;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border-left: 4px solid #39b54a;
+    padding-left: 1.5rem;
+}
+
+.blog-section h4 {
+    color: #cccccc;
+    font-size: 1.7rem;
+    font-weight: 500;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Code Blocks */
+pre {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-left: 4px solid #39b54a;
+    border-radius: 4px;
+    padding: 1.5rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    font-size: 1.4rem;
+    line-height: 1.6;
+}
+
+code {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    color: #e6e6e6;
+    font-size: 1.4rem;
+}
+
+pre code {
+    display: block;
+    white-space: pre;
+    word-wrap: normal;
+}
+
+/* Inline code */
+p code, li code {
+    background: #2a2a2a;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    color: #39b54a;
+    font-size: 1.3rem;
+}
+
+/* Code Comments */
+.code-comment {
+    color: #888;
+    font-style: italic;
+}
+
+/* Command Prompts */
+.bash-prompt::before {
+    content: "$ ";
+    color: #39b54a;
+    font-weight: bold;
+}
+
+/* Instruction Steps */
+.blog-content ol {
+    counter-reset: step-counter;
+    list-style: none;
+    padding-left: 0;
+}
+
+.blog-content ol li {
+    counter-increment: step-counter;
+    margin-bottom: 1.5rem;
+    padding-left: 3rem;
+    position: relative;
+    color: #cccccc;
+    font-size: 1.6rem;
+    line-height: 1.8;
+}
+
+.blog-content ol li::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #39b54a;
+    color: #000;
+    font-weight: bold;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+/* Unordered Lists */
+.blog-content ul {
+    list-style: none;
+    padding-left: 2rem;
+}
+
+.blog-content ul li {
+    position: relative;
+    margin-bottom: 1rem;
+    color: #cccccc;
+    font-size: 1.6rem;
+    line-height: 1.8;
+}
+
+.blog-content ul li::before {
+    content: "▸";
+    position: absolute;
+    left: -1.5rem;
+    color: #39b54a;
+    font-weight: bold;
+}
+
+/* Key Features Box */
+.key-features {
+    background: #1a2a1a;
+    border: 1px solid #39b54a;
+    border-radius: 6px;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+.key-features h4 {
+    color: #39b54a;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+.key-features ul {
+    margin-bottom: 0;
+}
+
+/* Warning/Note Boxes */
+.blog-note {
+    background: #2a2a1a;
+    border-left: 4px solid #f39c12;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: 4px;
+}
+
+.blog-note strong {
+    color: #f39c12;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+    .blog-section h3 {
+        font-size: 1.8rem;
+    }
+
+    .blog-section h4 {
+        font-size: 1.5rem;
+    }
+
+    pre {
+        font-size: 1.2rem;
+        padding: 1rem;
+    }
+
+    code {
+        font-size: 1.2rem;
+    }
+
+    .blog-content ol li {
+        font-size: 1.4rem;
+        padding-left: 2.5rem;
+    }
+
+    .blog-content ol li::before {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1.2rem;
+    }
+}
