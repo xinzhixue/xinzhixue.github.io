@@ -464,6 +464,7 @@ dd {
   padding-bottom: 56.25%;
   height: 0;
   overflow: hidden;
+  background: transparent;
 }
 
 .video-container iframe,
@@ -533,6 +534,7 @@ td:last-child {
 button,
 .btn {
   margin-bottom: 1.6rem;
+  border-radius: 50px;
 }
 
 fieldset {
@@ -2461,7 +2463,7 @@ html.no-csstransitions .hero-content {
 .s-about__section--profile::before {
   content: "";
   display: block;
-  background-color: #13294B;
+  background-color: #1e1e1e;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -2478,6 +2480,76 @@ html.no-csstransitions .hero-content {
   position: absolute;
   top: 8rem;
   left: calc(50% + 80px);
+}
+
+.liquid-glass img {
+  max-height: 500px;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border: none;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  transform: perspective(800px) rotateY(-2deg) rotateX(1deg);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.liquid-glass img:hover {
+  transform: perspective(800px) rotateY(0deg) rotateX(0deg) translateY(-4px);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Liquid glass for portfolio thumbnails */
+.folio-item__thumb {
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.folio-item__thumb:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Liquid glass for research & music videos */
+.s-portfolio .video-container,
+.s-testimonials .video-container {
+  border-radius: 20px !important;
+  overflow: hidden;
+  background: #000;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
+  transform: perspective(800px) rotateY(-1deg) rotateX(0.5deg);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.s-portfolio .video-container:hover,
+.s-testimonials .video-container:hover {
+  transform: perspective(800px) rotateY(0deg) rotateX(0deg) translateY(-4px);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* ------------------------------------------------------------------- 
@@ -2828,7 +2900,7 @@ html.no-csstransitions .hero-content {
 .s-portfolio::before {
   content: "";
   display: block;
-  background-color: #13294B;
+  background-color: #1e1e1e;
   position: absolute;
   top: 0;
   right: 0;
@@ -2901,6 +2973,10 @@ html.no-csstransitions .hero-content {
 
 .folio-item__thumb img {
   vertical-align: bottom;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* portfolio info
@@ -3022,6 +3098,16 @@ html.no-csstransitions .hero-content {
     font-size: 1.2rem;
   }
 
+}
+
+@media screen and (min-width:1201px) {
+  h5.video-caption-dark,
+  p.video-caption-dark {
+    color: #fff;
+  }
+  p.video-caption-dark {
+    color: rgba(255,255,255,0.8);
+  }
 }
 
 @media screen and (max-width:800px) {
