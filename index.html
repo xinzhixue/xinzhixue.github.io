@@ -207,7 +207,7 @@
           </div>
           <div class="column">
             <h6 style="color: var(--color-1-lighter, #cf1578); margin-bottom: 0.5rem;">Programming & Software</h6>
-            <p>MATLAB &middot; Python &middot; CUDA/GPU &middot; ImageJ Macro &middot; HTML/CSS/JS &middot; DaVis PIV Software &middot; CFD</p>
+            <p>MATLAB &middot; Python &middot; ImageJ Macro &middot; HTML/CSS/JS &middot; DaVis PIV Software &middot; GPU-accelerated PIV &amp; Holographic Reconstruction &middot; CFD</p>
 
             <h6 style="color: var(--color-1-lighter, #cf1578); margin-bottom: 0.5rem;">Domain Expertise</h6>
             <p>Multiphase Turbulent Flows &middot; Spray Atomization &middot; Droplet Breakup Mechanics &middot; Oil Spill Dispersion &middot; Cavitation &middot; Instrument Design & Fabrication</p>
@@ -320,7 +320,7 @@
             <a href="#0" title="Project Link" class="folio-item__project-link">Project
               Link</a>
             <div class="folio-item__caption">
-              <p>Accurate experimental measurement of droplet size distribution is crucial to predict the dispersion of pollutants in the event of an oil spill. Submersible Miniaturized Inline Holographic Camera (MiniHolocam) was built from scratch and deployed to <i>in situ</i> quantify droplet size distribution of a crude oil jet in crossflow. The instrument can also be applied to study aerosol generation and oil-water interfaces.</p>
+              <p>A custom-built, submersible inline holography system designed for <i>in situ</i> measurement of droplet size distributions within opaque oil plumes. The instrument houses a 635 nm diode laser with spatial filter and collimating optics in one sealed aluminum tube, and a Schneider imaging lens with a 5-megapixel CMOS camera (3.3 &mu;m/pixel resolution) in another, mounted on an optical rail for adjustable sample volume depth. Deployed in a 2.5 m towing tank, the Mini-Holocam was suspended within crude oil jet-in-crossflow plumes to measure sub-millimeter droplet distributions at three dispersant-to-oil ratios. Increasing dispersant concentration dramatically decreased droplet sizes (volume median diameter from 734 &mu;m to 234 &mu;m) and reduced plume rise rates. A force-balance trapping model correctly predicted which droplet sizes are captured by the counter-rotating vortex pair (CVP) characteristic of jets in crossflow. This work was funded by the Gulf of Mexico Research Initiative (GoMRI) and published in the <i>Journal of Geophysical Research: Oceans</i> (2016).</p>
             </div>
           </div>
         </div>
@@ -339,7 +339,7 @@
             <a href="#0" title="Project Link" class="folio-item__project-link">Project
               Link</a>
             <div class="folio-item__caption">
-              <p>Three-dimensional locations and size distributions of droplets or particles can be obtained by hologram reconstruction, modified Hough transform and parameter space selections.</p>
+              <p>An end-to-end computational pipeline for extracting 3D droplet positions and sizes from inline holograms. The pipeline spans eight stages: preprocessing, GPU-CUDA holographic reconstruction into volumetric image stacks, high-pass filtering with minimum intensity projection, 2D segmentation (separate paths for large and small droplets using local adaptive thresholding and morphological operations), 3D circular Hough transform for droplet center and radius detection in the reconstructed volume, minimum intensity-based sizing for sub-resolution particles, and finally droplet count concentration (DCC) and mass concentration (DMC) spectrum computation. For high-magnification near-nozzle spray images where traditional methods fail, the pipeline is augmented with wavelet-FFT stripe removal, POD-based background subtraction, and Weka machine learning classifiers trained to distinguish droplets from background. MATLAB scripts auto-generate ImageJ macros for batch processing, enabling quantification of droplet sizes in previously inaccessible dense spray regions.</p>
             </div>
           </div>
         </div>
